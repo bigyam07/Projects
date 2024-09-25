@@ -1,11 +1,3 @@
+wake up
+get ready
 
-1
-wakey wakey
-1
-wakey wakey
-2
-hello
-1
-hi
-2
-go to school

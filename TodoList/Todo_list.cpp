@@ -1,9 +1,10 @@
 #include<iostream>
 #include<fstream>
+#include<cstdio> //For rename and removing file
 using namespace std;
 class TodoList {
     public:
-        int id = 0;
+        int count = 0;
         string task;
         void banner();
         void addTask();
@@ -29,11 +30,9 @@ void TodoList :: addTask() {
     cout << "Save? (y/n): ";
     cin >> save;
     if(save == 'y') {
-        id ++;
         ofstream fout;
         fout.open("todo.txt", ios::app);
-        fout << "\n" << id;
-        fout << "\n" << task;
+        fout << task << endl;
         fout.close();
 
         char more;
@@ -59,20 +58,20 @@ void TodoList :: showTask() {
     if(!fin.is_open()) {
         cout << "Task is empty!!" << endl; 
     }
+    bool flag = false;
     while(!fin.eof()) {
-        fin >> id;
-        fin.ignore();
         getline(fin, taskInput);
         if(taskInput != "") {
-            cout << "\t" << id << ": " << taskInput << endl;
+            flag = true;
+            cout << "\t" << ": " << taskInput << endl;
         }
-        else {
-            cout << "\tEmpty!" << endl;
-        }
+    }
+    if(!flag) {
+        cout << "\tEmpty!\n\tAdd some task First..!" << endl;
     }
     fin.close();
     char exit;
-    cout << "Exit? (y/n)";
+    cout << "Exit? (y/n): ";
     cin >> exit;
     if(exit != 'y' && exit != 'Y') {
         showTask();
@@ -91,8 +90,10 @@ void TodoList :: searchTask() {
     bool found = false;
     while(!fin.eof()) {
         getline(fin, store,'\n');
+        count ++;
         if(store == search) {
             cout << "Found!!" << endl;
+            cout << "AT LINE NO. :: " << count << endl;
             found = true;
             break;
         }
@@ -111,7 +112,47 @@ void TodoList :: searchTask() {
     cout << "Exit successful" << endl;
 }
 void TodoList :: deleteTask() {
-    cout << "This is delete";
+    system("cls");
+    banner();
+    string Delete, search;
+    cout << "Enter task to delete: ";
+    cin.ignore();
+    getline(cin, Delete);
+    ofstream fout;
+    ifstream fin;
+    fout.open("temp.txt",ios::app);
+    fin.open("todo.txt");
+    bool flag = false;
+    while(!fin.eof()) {
+        getline(fin,search);
+        if(Delete != search) {
+            fout << search << endl;
+        }
+        else {
+            count --;
+            flag = true;
+        }
+    }
+    fin.close();
+    fout.close();
+    if(flag == true) {
+        remove("todo.txt");
+        rename("temp.txt", "todo.txt");
+        cout << "Delete Successful.." << endl;
+    } else {
+        remove("temp.txt");
+        cout << "Task not found!!" << endl;
+    }
+    char exit;
+    cout << "Exit (y/n): ";
+    cin >> exit;
+    if(exit != 'y' && exit != 'Y') {
+        deleteTask();
+    }
+    else {
+        system("cls");
+        cout << "EXIT SUCCESSFUL..!" << endl;
+    }
 }
 void TodoList :: updateTask() {
     cout << "This is update";
@@ -151,7 +192,12 @@ int main() {
                 break;
             case 6:
                 option = false;
+                system("cls");
+                cout << "EXIT SUCCESSFUL....!";
+                break;
             default:
+                system("cls");
+                cout << "Invalid Input." << endl;
                 break;
         }
     }
