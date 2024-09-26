@@ -23,7 +23,7 @@ void banner() {
 void TodoList :: addTask() {
     system("cls");
     banner();
-    cin.ignore();
+    cin.ignore(); //Ignore input buffer
     cout << "Enter new task: " << endl;
     getline(cin, task);
     char save;
@@ -126,26 +126,27 @@ void TodoList :: deleteTask() {
     getline(cin, Delete);
     ofstream fout;
     ifstream fin;
-    fout.open("temp.txt",ios::app);
-    fin.open("todo.txt");
+    fout.open("temp.txt",ios::app); // creating temporary file to store content from original
+    fin.open("todo.txt"); // opening OG file
     bool flag = false;
     while(!fin.eof()) {
         getline(fin,search);
-        if(Delete != search) {
-            fout << search << endl;
+        if(Delete != search) { // if task to delete is not in file then /
+            fout << search << endl; // Store them in temporary file.
         }
         else {
-            flag = true;
+            flag = true;  // if task found then skipped it.
         }
     }
     fin.close();
     fout.close();
-    if(flag == true) {
-        remove("todo.txt");
-        rename("temp.txt", "todo.txt");
+    if(flag == true) { // if task is found
+        remove("todo.txt"); //remove Original file 
+        rename("temp.txt", "todo.txt"); //replace Original file with temp file
         cout << "Delete Successful.." << endl;
     } else {
-        remove("temp.txt");
+        remove("temp.txt"); // if task not found then 
+        //just remove the temp file cause it's not any use
         cout << "Task not found!!" << endl;
     }
     char exit;
@@ -177,9 +178,9 @@ void TodoList :: updateTask() {
             fout << searchFromFile << endl;
         }
         else {
-            cout << "Enter task to update: ";
-            getline(cin, update);
-            fout << update << endl;
+            cout << "Enter task to update: "; // if task is found then, 
+            getline(cin, update); 
+            fout << update << endl; // replace it with updated task
             flag = 1;
         }
     }
